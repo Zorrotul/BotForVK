@@ -1,7 +1,5 @@
 package vk.bot.service;
 
-import com.vk.api.sdk.exceptions.ApiException;
-import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.messages.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,5 +31,6 @@ public class BotHandler {
                 }
             });
         }
+        ts = botService.getNewTs();
     }
 }
