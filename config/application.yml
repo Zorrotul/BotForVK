@@ -1,0 +1,9 @@
+#include: creeds.yml
+app:
+  config:
+    scheduler:
+      period: 500
+      awaitTerminationMillis: 1000
+    creeds:
+      groupId: *********
+      groupToken: vk1.a.*********************
