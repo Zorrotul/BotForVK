@@ -4,6 +4,7 @@ import com.vk.api.sdk.objects.messages.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -12,6 +13,8 @@ public class BotHandler {
 
     private final BotService botService;
     private Integer ts;
+    private final static List<String> GREETINGS = Arrays.asList("Hello", "Hi", "Hey", "Howdy", "Даров", "Привет",
+            "Здравствуй", "Добырый день");
 
     public BotHandler(BotService botService) {
         this.botService = botService;
@@ -24,8 +27,8 @@ public class BotHandler {
         if (!messages.isEmpty()) {
             messages.forEach(message -> {
                 log.info("get messages: {}", message.toString());
-                if (message.getText().equals("Ты жопа")) {
-                    botService.sendMessage(message.setText("Сам ты жопа!"));
+                if (GREETINGS.contains(message.getText())) {
+                    botService.sendMessage(message.setText("И тебе привет!"));
                 } else {
                     botService.sendMessage(message.setText("Вы написали: " + message.getText()));
                 }

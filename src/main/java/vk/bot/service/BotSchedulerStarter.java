@@ -19,7 +19,7 @@ public class BotSchedulerStarter {
     private final BotHandler botHandler;
 
 
-    public BotSchedulerStarter(@Qualifier(BotSchedulerConfig.SCHEDULER_NAME) ThreadPoolTaskScheduler threadPoolTaskScheduler, AppConfig appConfig, BotHandler botHandler)  {
+    public BotSchedulerStarter(@Qualifier(BotSchedulerConfig.SCHEDULER_NAME) ThreadPoolTaskScheduler threadPoolTaskScheduler, AppConfig appConfig, BotHandler botHandler) {
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.appConfig = appConfig;
         this.botHandler = botHandler;
@@ -28,10 +28,7 @@ public class BotSchedulerStarter {
     @PostConstruct
     public void init() {
         threadPoolTaskScheduler.scheduleWithFixedDelay(
-                () -> {
-                    //log.info("Ya tut");
-                    botHandler.handle();
-                },
+                botHandler::handle,
                 appConfig.getPeriod()
         );
     }

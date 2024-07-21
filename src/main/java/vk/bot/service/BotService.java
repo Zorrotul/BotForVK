@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vk.bot.config.BotCreeds;
-import vk.bot.error.SendMessageException;
+import vk.bot.error.BotServiceException;
 
 import java.util.List;
 import java.util.Random;
@@ -22,15 +22,12 @@ import java.util.Random;
 @Service
 public class BotService {
 
-    private final BotCreeds creeds;
     private final VkApiClient vk;
     private final GroupActor actor;
     private final Random random;
 
     public BotService(BotCreeds creeds) {
-        this.creeds = creeds;
-        log.info("AuthService<-");
-        log.info("getGroupId: {}, getGroupToken: {}", creeds.getGroupId(), creeds.getGroupToken());
+        log.info("AuthService<- getGroupId: {}, getGroupToken: {}", creeds.getGroupId(), creeds.getGroupToken());
         TransportClient transportClient = new HttpTransportClient();
         this.vk = new VkApiClient(transportClient);
         this.random = new Random();
@@ -38,27 +35,30 @@ public class BotService {
     }
 
     public List<Message> readMessage(Integer ts) {
+        log.info("reading message with ts = {}", ts);
         MessagesGetLongPollHistoryQuery historyQuery = vk.messages().getLongPollHistory(actor).ts(ts);
-        List<Message> messages = null;
+        List<Message> messages;
         try {
             messages = historyQuery.execute().getMessages().getItems();
             log.info("Messages = {}", messages);
             return messages;
         } catch (ApiException | ClientException e) {
             log.error("Cant read message", e);
-            throw new SendMessageException(e);
+            throw new BotServiceException(e);
         }
 
     }
 
     public void sendMessage(Message message) {
         try {
+            log.info("sending message = {}", message.toString());
             vk.messages().send(actor).message(message.getText())
                     .userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
 
         } catch (ApiException |
                  ClientException e) {
-            log.error("", e);
+            log.error("Cant send message", e);
+            throw new BotServiceException(e);
         }
     }
 
@@ -69,7 +69,7 @@ public class BotService {
             ts = vk.messages().getLongPollServer(actor).execute().getTs();
         } catch (ApiException | ClientException e) {
             log.error("Cant get new ts", e);
-            throw new SendMessageException(e);
+            throw new BotServiceException(e);
         }
         return ts;
     }
