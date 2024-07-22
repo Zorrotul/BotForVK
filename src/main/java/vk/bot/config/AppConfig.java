@@ -19,9 +19,6 @@ public class AppConfig {
     @NotNull
     private Long awaitTerminationMillis;
 
-    @NotNull
-    private Integer poolSize;
-
     @NotBlank
     private String threadNamePrefix;
 }
