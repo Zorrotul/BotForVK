@@ -1,9 +1,10 @@
-#include: creeds.yml
 app:
   config:
     scheduler:
       period: 500
       awaitTerminationMillis: 1000
+      poolSize: 1
+      threadNamePrefix: bot-sch
     creeds:
       groupId: *********
       groupToken: vk1.a.*********************
