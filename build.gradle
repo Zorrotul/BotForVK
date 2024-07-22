@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    //vk
     implementation 'com.vk.api:sdk:1.0.14'
 
     //Lombok
@@ -33,7 +34,7 @@ dependencies {
     //Spring
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-
+    //Test
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }

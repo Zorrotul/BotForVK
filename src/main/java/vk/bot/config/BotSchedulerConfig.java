@@ -22,10 +22,14 @@ public class BotSchedulerConfig {
     @Bean(name = SCHEDULER_NAME)
     public ThreadPoolTaskScheduler scheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setThreadNamePrefix("bot-sch");
-        scheduler.setPoolSize(1);
-        log.info("appConfig<- AwaitTerminationMillis: {}, period: {}", appConfig.getAwaitTerminationMillis(), appConfig.getPeriod());
-        scheduler.setAwaitTerminationMillis(appConfig.getAwaitTerminationMillis());//TODO: параметризовать через yml
+        log.info("appConfig<- threadNamePrefix: {}, poolSize: {} , AwaitTerminationMillis: {}, period: {}",
+                appConfig.getThreadNamePrefix(),
+                appConfig.getPoolSize(),
+                appConfig.getAwaitTerminationMillis(),
+                appConfig.getPeriod());
+        scheduler.setThreadNamePrefix(appConfig.getThreadNamePrefix());
+        scheduler.setPoolSize(appConfig.getPoolSize());
+        scheduler.setAwaitTerminationMillis(appConfig.getAwaitTerminationMillis());
 
         scheduler.initialize();
         return scheduler;

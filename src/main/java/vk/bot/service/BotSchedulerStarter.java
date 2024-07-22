@@ -27,6 +27,7 @@ public class BotSchedulerStarter {
 
     @PostConstruct
     public void init() {
+        log.info("Scheduler started");
         threadPoolTaskScheduler.scheduleWithFixedDelay(
                 botHandler::handle,
                 appConfig.getPeriod()

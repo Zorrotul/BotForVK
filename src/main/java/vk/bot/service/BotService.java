@@ -35,12 +35,12 @@ public class BotService {
     }
 
     public List<Message> readMessage(Integer ts) {
-        log.info("reading message with ts = {}", ts);
         MessagesGetLongPollHistoryQuery historyQuery = vk.messages().getLongPollHistory(actor).ts(ts);
+        log.debug("reading message with ts = {}", ts);
         List<Message> messages;
         try {
             messages = historyQuery.execute().getMessages().getItems();
-            log.info("Messages = {}", messages);
+            log.debug("Messages = {}", messages);
             return messages;
         } catch (ApiException | ClientException e) {
             log.error("Cant read message", e);
@@ -62,11 +62,11 @@ public class BotService {
         }
     }
 
-
     public Integer getNewTs() {
         Integer ts;
         try {
             ts = vk.messages().getLongPollServer(actor).execute().getTs();
+            log.debug("getNewTs<- ts = {}", ts);
         } catch (ApiException | ClientException e) {
             log.error("Cant get new ts", e);
             throw new BotServiceException(e);
