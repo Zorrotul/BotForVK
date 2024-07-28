@@ -1,5 +1,6 @@
 package vk.bot.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -24,11 +25,12 @@ public class BotSchedulerStarter {
         this.botHandler = botHandler;
     }
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
         log.info("Scheduler started");
+        botHandler.init();
         threadPoolTaskScheduler.scheduleWithFixedDelay(
-                botHandler::oldHandle,
+                botHandler::handle,
                 schedulerConfig.getPeriod()
         );
     }

@@ -1,60 +1,72 @@
 package vk.bot.service;
 
-import com.vk.api.sdk.objects.messages.Message;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import vk.bot.config.HandlerConfig;
+import vk.bot.error.HandlerException;
+import vk.bot.error.SendServiceException;
 import vk.bot.model.client.HistoryDTO;
-import vk.bot.service.client.VkBaseClient;
 import vk.bot.model.client.VkMessageDTO;
+import vk.bot.service.client.MessageHistoryServiceBean;
+import vk.bot.service.client.SendService;
+import vk.bot.service.client.SendServiceBean;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BotHandler {
 
-    private final BotService botService;
-    private final VkBaseClient vkClient;
-    private Integer ts;
-    private Integer lastMessageId;
+    private final HandlerConfig handlerConfig;
+    private final SendService sendService;
+    private final MessageHistoryServiceBean messageHistoryServiceBean;
+    private Long lastMessageId;
     private final static List<String> GREETINGS = Arrays.asList("Hello", "Hi", "Hey", "Howdy", "Даров", "Привет",
             "Здравствуй", "Добырый день");
 
-    public BotHandler(BotService botService, VkBaseClient vkClient) {
-        this.botService = botService;
-        this.vkClient = vkClient;
-        ts = botService.getNewTs();
+    synchronized void handle() {
+        HistoryDTO history = messageHistoryServiceBean.getHistory();
+        handleUnprocessedMessages(history.getMessages());
     }
 
-    void oldHandle() {
-        List<Message> messages = botService.readMessage(ts);
+    private void handleUnprocessedMessages(List<VkMessageDTO> messages) {
 
-        if (!messages.isEmpty()) {
-            messages.forEach(message -> {
-                log.info("get messages: {}", message.toString());
-                if (GREETINGS.contains(message.getText())) {
-                    botService.sendMessage(message.setText("И тебе привет!"));
-                } else {
-                    botService.sendMessage(message.setText("Вы написали: " + message.getText()));
+        Long tempMaxId = messages.get(0).getId();
+
+        Collections.reverse(messages);
+        messages.stream()
+                .filter(m -> !m.getFromId().equals(-sendService.getGroupId()))
+                .filter(m -> m.getText() != null)
+                .filter(m -> m.getId() > lastMessageId)
+                .peek(m -> log.debug("message id: {}, from: {}, message: {}", m.getId(), m.getFromId(), m.getText()))
+                .forEachOrdered(m -> tryToSendMessage(m.getText()));
+
+        lastMessageId = tempMaxId;
+    }
+
+    public void init() {
+        HistoryDTO history = messageHistoryServiceBean.getHistory();
+        lastMessageId = history.getMessages().get(0).getId();
+    }
+
+    private void tryToSendMessage(String message) {
+        for (int i = 0; i < handlerConfig.getNumberOfAttempts(); i++) {
+            try {
+                sendService.sendMessage(message);
+                return;
+            } catch (SendServiceException e) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    log.error("Thread was interrupted");
+                    throw new SendServiceException(ie);
                 }
-            });
+            }
         }
-        ts = botService.getNewTs();
-    }
-
-    void handle() {
-        HistoryDTO history = vkClient.getHistory();
-        List<VkMessageDTO> newMessages = getUnprocessedMessages(history.getMessages());
-    }
-
-    private List<VkMessageDTO> getUnprocessedMessages(List<VkMessageDTO> messages){
-        //List<VkMessage> messages = historyDTO.getMessages();
-
-        List<VkMessageDTO> newMessages = messages.stream()
-                .filter(m->!m.getFromId().equals(vkClient.getGroupId()))
-                .filter(m->m.getText()!=null)
-                .toList();
-        return newMessages;
     }
 }
