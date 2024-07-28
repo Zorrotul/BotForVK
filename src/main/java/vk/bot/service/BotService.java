@@ -11,7 +11,7 @@ import com.vk.api.sdk.queries.messages.MessagesGetLongPollHistoryQuery;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import vk.bot.config.BotCreeds;
+import vk.bot.config.BotCreedsConfig;
 import vk.bot.error.BotServiceException;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class BotService {
     private final GroupActor actor;
     private final Random random;
 
-    public BotService(BotCreeds creeds) {
+    public BotService(BotCreedsConfig creeds) {
         log.info("AuthService<- getGroupId: {}, getGroupToken: {}", creeds.getGroupId(), creeds.getGroupToken());
         TransportClient transportClient = new HttpTransportClient();
         this.vk = new VkApiClient(transportClient);

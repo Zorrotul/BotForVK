@@ -17,18 +17,18 @@ public class BotSchedulerConfig {
     public static final String SCHEDULER_NAME = "bot-scheduler";
 
     @Autowired
-    private final AppConfig appConfig;
+    private final SchedulerConfig schedulerConfig;
 
     @Bean(name = SCHEDULER_NAME)
     public ThreadPoolTaskScheduler scheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         log.info("appConfig<- threadNamePrefix: {}, AwaitTerminationMillis: {}, period: {}",
-                appConfig.getThreadNamePrefix(),
-                appConfig.getAwaitTerminationMillis(),
-                appConfig.getPeriod());
-        scheduler.setThreadNamePrefix(appConfig.getThreadNamePrefix());
+                schedulerConfig.getThreadNamePrefix(),
+                schedulerConfig.getAwaitTerminationMillis(),
+                schedulerConfig.getPeriod());
+        scheduler.setThreadNamePrefix(schedulerConfig.getThreadNamePrefix());
         scheduler.setPoolSize(1);
-        scheduler.setAwaitTerminationMillis(appConfig.getAwaitTerminationMillis());
+        scheduler.setAwaitTerminationMillis(schedulerConfig.getAwaitTerminationMillis());
 
         scheduler.initialize();
         return scheduler;

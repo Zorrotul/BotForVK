@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "app.config.scheduler")
 @Valid
-public class AppConfig {
+public class SchedulerConfig {
 
     @NotNull
     private Long period;
@@ -21,4 +21,5 @@ public class AppConfig {
 
     @NotBlank
     private String threadNamePrefix;
+
 }

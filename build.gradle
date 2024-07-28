@@ -33,6 +33,10 @@ dependencies {
 
     //Spring
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework:spring-web:6.0.2'
+
+    //Json
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
 
     //Test
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

@@ -1,6 +1,5 @@
 package vk.bot.config;
 
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,15 +9,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "app.config.creeds")
+@ConfigurationProperties(prefix = "app.config.client")
 @Valid
-public class BotCreeds {
+public class ClientConfig {
+
     @NotNull
-    private Integer groupId;
+    private Long peerId;
 
-    @NotBlank
-    private String groupToken;
-
+    @NotNull
+    private Long groupId;
 }
-
-
