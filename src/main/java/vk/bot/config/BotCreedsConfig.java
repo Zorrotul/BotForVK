@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Valid
 public class BotCreedsConfig {
     @NotNull
-    private Integer groupId;
+    private Long groupId;
 
     @NotBlank
     private String groupToken;

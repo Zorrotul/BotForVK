@@ -14,4 +14,8 @@ public class HandlerConfig {
 
     @NotNull
     private Integer numberOfAttempts;
+
+    @NotNull
+    private Long messageSenderTimeout;
+
 }

@@ -1,7 +1,6 @@
 package vk.bot.config;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +14,5 @@ public class ClientConfig {
 
     @NotNull
     private Long peerId;
-
-    @NotNull
-    private Long groupId;
 }
+

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-import vk.bot.config.SchedulerConfig;
 import vk.bot.config.BotSchedulerConfig;
+import vk.bot.config.SchedulerConfig;
 
 @Slf4j
 @Service

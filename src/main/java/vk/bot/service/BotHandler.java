@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vk.bot.config.HandlerConfig;
-import vk.bot.error.HandlerException;
 import vk.bot.error.SendServiceException;
 import vk.bot.model.client.HistoryDTO;
 import vk.bot.model.client.VkMessageDTO;
 import vk.bot.service.client.MessageHistoryServiceBean;
 import vk.bot.service.client.SendService;
-import vk.bot.service.client.SendServiceBean;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,8 +22,6 @@ public class BotHandler {
     private final SendService sendService;
     private final MessageHistoryServiceBean messageHistoryServiceBean;
     private Long lastMessageId;
-    private final static List<String> GREETINGS = Arrays.asList("Hello", "Hi", "Hey", "Howdy", "Даров", "Привет",
-            "Здравствуй", "Добырый день");
 
     synchronized void handle() {
         HistoryDTO history = messageHistoryServiceBean.getHistory();
@@ -60,11 +55,11 @@ public class BotHandler {
                 return;
             } catch (SendServiceException e) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(handlerConfig.getMessageSenderTimeout());
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     log.error("Thread was interrupted");
-                    throw new SendServiceException(ie);
+                    throw new RuntimeException(ie);
                 }
             }
         }
