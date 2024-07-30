@@ -19,7 +19,6 @@ public class SendServiceBean implements SendService {
     private final RestTemplate restTemplate;
     private final BotCreedsConfig creeds;
     private final ClientConfig clientConfig;
-    private final String sendUrl = "https://api.vk.com/method/messages.send";
     private final HttpHeaders headers;
 
     public SendServiceBean(RestTemplate restTemplate, BotCreedsConfig creeds, ClientConfig clientConfig) {
@@ -33,6 +32,7 @@ public class SendServiceBean implements SendService {
     @Override
     public void sendMessage(String message) {
 
+        String sendUrl = clientConfig.getUrl() + "/method/messages.send";
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("v", "5.199");
         body.add("access_token", creeds.getGroupToken());
