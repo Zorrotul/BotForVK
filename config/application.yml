@@ -1,7 +1,8 @@
 app:
   config:
     client:
-      peerId: *********
+      peerId: 12345
+      url: http://localhost:8089/
     handler:
       numberOfAttempts: 3
       messageSenderTimeout: 2000
@@ -10,5 +11,5 @@ app:
       awaitTerminationMillis: 1000
       threadNamePrefix: bot-sch
     creeds:
-      groupId: *********
-      groupToken: vk1.a.*********************
+      groupId: 67890
+      groupToken: test_token
