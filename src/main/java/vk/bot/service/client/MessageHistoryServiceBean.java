@@ -18,10 +18,10 @@ import java.util.Optional;
 public class MessageHistoryServiceBean implements MessageHistoryService {
     private final RestTemplate restTemplate;
     private final String url;
-    private final String getHistoryUrl = "https://api.vk.com/method/messages.getHistory";
 
     public MessageHistoryServiceBean(RestTemplate restTemplate, ClientConfig clientConfig, BotCreedsConfig creeds) {
         this.restTemplate = restTemplate;
+        String getHistoryUrl = clientConfig.getUrl() + "method/messages.getHistory";
         this.url = UriComponentsBuilder.fromHttpUrl(getHistoryUrl)
                 .queryParam("v", "5.199")
                 .queryParam("access_token", creeds.getGroupToken())
@@ -31,16 +31,19 @@ public class MessageHistoryServiceBean implements MessageHistoryService {
                 .queryParam("group_id", creeds.getGroupId())
                 .queryParam("rev", 0)
                 .toUriString();
+        log.info(url);
     }
 
     @Override
     public HistoryDTO getHistory() {
-        log.debug("getHistory<-");
+        log.debug("getHistory<- url: {}", url);
 
         ResponseEntity<ResponseHistoryWrapperDTO> response = restTemplate.getForEntity(url, ResponseHistoryWrapperDTO.class);
+        ResponseEntity<String> response2 = restTemplate.getForEntity(url, String.class);
+        log.debug(String.valueOf(response.getBody()));
         return Optional.of(response)
                 .filter(r -> {
-                    log.debug("status: {}", r.getStatusCode());
+                    log.debug("status: {}, body: {}", r.getStatusCode(), r.getBody());
                     return r.getStatusCode().is2xxSuccessful();
                 })
                 .map(ResponseEntity::getBody)

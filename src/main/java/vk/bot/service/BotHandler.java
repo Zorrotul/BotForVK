@@ -23,7 +23,7 @@ public class BotHandler {
     private final MessageHistoryServiceBean messageHistoryServiceBean;
     private Long lastMessageId;
 
-    synchronized void handle() {
+    void handle() {
         HistoryDTO history = messageHistoryServiceBean.getHistory();
         handleUnprocessedMessages(history.getMessages());
     }
