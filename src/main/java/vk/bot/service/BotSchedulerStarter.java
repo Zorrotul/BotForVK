@@ -2,26 +2,20 @@ package vk.bot.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import vk.bot.config.BotSchedulerConfig;
-import vk.bot.config.SchedulerConfig;
 
+@EnableScheduling
 @Slf4j
 @Service
 public class BotSchedulerStarter {
 
-    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
-
-    private final SchedulerConfig schedulerConfig;
-
     private final BotHandler botHandler;
 
 
-    public BotSchedulerStarter(@Qualifier(BotSchedulerConfig.SCHEDULER_NAME) ThreadPoolTaskScheduler threadPoolTaskScheduler, SchedulerConfig schedulerConfig, BotHandler botHandler) {
-        this.threadPoolTaskScheduler = threadPoolTaskScheduler;
-        this.schedulerConfig = schedulerConfig;
+    public BotSchedulerStarter(BotHandler botHandler) {
+
         this.botHandler = botHandler;
     }
 
@@ -29,9 +23,11 @@ public class BotSchedulerStarter {
     public void init() {
         log.info("Scheduler started");
         botHandler.init();
-        threadPoolTaskScheduler.scheduleWithFixedDelay(
-                botHandler::handle,
-                schedulerConfig.getPeriod()
-        );
+        startSchedule();
+    }
+
+    @Scheduled(fixedDelayString = "${app.config.scheduler.period}")
+    public void startSchedule() {
+        botHandler.handle();
     }
 }

@@ -17,7 +17,7 @@ public class BotCreedsConfig {
     private Long groupId;
 
     @NotBlank
-    private String groupToken;
+    private String accessToken;
 
 }
 

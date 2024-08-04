@@ -21,10 +21,10 @@ public class MessageHistoryServiceBean implements MessageHistoryService {
 
     public MessageHistoryServiceBean(RestTemplate restTemplate, ClientConfig clientConfig, BotCreedsConfig creeds) {
         this.restTemplate = restTemplate;
-        String getHistoryUrl = clientConfig.getUrl() + "method/messages.getHistory";
+        String getHistoryUrl = clientConfig.getUrl() + clientConfig.getGetHistoryMethod();
         this.url = UriComponentsBuilder.fromHttpUrl(getHistoryUrl)
-                .queryParam("v", "5.199")
-                .queryParam("access_token", creeds.getGroupToken())
+                .queryParam("v", clientConfig.getVersionApi())
+                .queryParam("access_token", creeds.getAccessToken())
                 .queryParam("count", 10)
                 .queryParam("offset", 0)
                 .queryParam("peer_id", clientConfig.getPeerId())
@@ -39,7 +39,6 @@ public class MessageHistoryServiceBean implements MessageHistoryService {
         log.debug("getHistory<- url: {}", url);
 
         ResponseEntity<ResponseHistoryWrapperDTO> response = restTemplate.getForEntity(url, ResponseHistoryWrapperDTO.class);
-        ResponseEntity<String> response2 = restTemplate.getForEntity(url, String.class);
         log.debug(String.valueOf(response.getBody()));
         return Optional.of(response)
                 .filter(r -> {
