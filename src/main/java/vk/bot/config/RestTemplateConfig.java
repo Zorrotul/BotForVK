@@ -1,5 +1,6 @@
 package vk.bot.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +12,14 @@ import java.time.Duration;
 @Configuration
 public class RestTemplateConfig {
 
+    @Autowired
+    ClientConfig clientConfig;
+
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder
-                .setConnectTimeout(Duration.ofMillis(2000))
+                .setConnectTimeout(Duration.ofMillis(clientConfig.getConnectTimeout()))
+                .setReadTimeout(Duration.ofDays(clientConfig.getReadTimeout()))
                 .build();
     }
 }

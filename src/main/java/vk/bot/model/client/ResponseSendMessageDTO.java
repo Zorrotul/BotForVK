@@ -1,5 +1,6 @@
 package vk.bot.model.client;
 
+import jakarta.validation.constraints.AssertTrue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,8 @@ public class ResponseSendMessageDTO {
 
     private ErrorDTO error;
 
+    @AssertTrue(message = "Unknown response")
+    public boolean isResponseValid() {
+        return response != null || error != null;
+    }
 }

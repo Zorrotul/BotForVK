@@ -31,10 +31,10 @@ public class SendServiceBean implements SendService {
         this.creeds = creeds;
         this.clientConfig = clientConfig;
         this.headers = new HttpHeaders();
-        this.headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-        this.sendUrl = clientConfig.getUrl() + clientConfig.getSendMessageMethod();
         this.urlBody = new LinkedMultiValueMap<>();
+
+        this.headers.set("Content-Type", "application/x-www-form-urlencoded");
+        this.sendUrl = clientConfig.getUrl() + clientConfig.getSendMessageMethod();
         this.urlBody.add("v", clientConfig.getVersionApi());
         this.urlBody.add("access_token", creeds.getAccessToken());
         this.urlBody.add("peer_id", String.valueOf(clientConfig.getPeerId()));
@@ -43,11 +43,10 @@ public class SendServiceBean implements SendService {
 
     @Override
     public ResponseEntity<ResponseSendMessageDTO> sendMessage(String message) {
+        log.debug("sendMessage<-");
 
         this.urlBody.set("message", String.format("Вы сказали: %s", message));
         this.urlBody.set("random_id", String.valueOf(clientConfig.getRandomId()));
-
-        log.info("sendMessage<-");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(urlBody, headers);
         log.info("request: {}", request);
@@ -63,11 +62,11 @@ public class SendServiceBean implements SendService {
 
     @Override
     public ResponseEntity<ResponseSendMessageDTO> sendMessage(String message, Long randomId) {
+        log.info("sendMessage with random id<-");
 
         this.urlBody.set("message", String.format("Вы сказали: %s", message));
         this.urlBody.set("random_id", String.valueOf(randomId));
 
-        log.info("sendMessage<-");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(urlBody, headers);
         log.info("request: {}", request);

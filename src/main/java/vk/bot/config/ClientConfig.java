@@ -34,8 +34,14 @@ public class ClientConfig {
     @NotNull
     private AtomicLong randomId = new AtomicLong(LocalTime.now().getNano());
 
-    public Long getRandomId(){
-        System.out.println("RandomId->" + randomId);
+    @NotNull
+    private Integer connectTimeout;
+
+    @NotNull
+    private Integer readTimeout;
+
+
+    public Long getRandomId() {
         return randomId.incrementAndGet();
     }
 }

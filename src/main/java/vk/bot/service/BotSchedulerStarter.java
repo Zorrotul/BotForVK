@@ -28,6 +28,10 @@ public class BotSchedulerStarter {
 
     @Scheduled(fixedDelayString = "${app.config.scheduler.period}")
     public void startSchedule() {
-        botHandler.handle();
+        try {
+            botHandler.handle();
+        } catch (Exception e) {
+            log.error("", e);
+        }
     }
 }

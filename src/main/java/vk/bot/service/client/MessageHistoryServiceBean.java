@@ -37,8 +37,12 @@ public class MessageHistoryServiceBean implements MessageHistoryService {
     @Override
     public HistoryDTO getHistory() {
         log.debug("getHistory<- url: {}", url);
+        return tryToGetHistory();
+    }
 
+    private HistoryDTO tryToGetHistory() {
         ResponseEntity<ResponseHistoryWrapperDTO> response = restTemplate.getForEntity(url, ResponseHistoryWrapperDTO.class);
+
         log.debug(String.valueOf(response.getBody()));
         return Optional.of(response)
                 .filter(r -> {
