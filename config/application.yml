@@ -3,13 +3,18 @@ app:
     client:
       peerId: 12345
       url: http://localhost:8089/
+      versionApi: 5.199
+      getHistoryMethod: /method/messages.getHistory
+      sendMessageMethod: /method/messages.send
+      connectTimeout: 2000
+      readTimeout: 1500
     handler:
       numberOfAttempts: 3
-      messageSenderTimeout: 2000
+      waitingTimeout: 2000
     scheduler:
       period: 500
       awaitTerminationMillis: 1000
       threadNamePrefix: bot-sch
     creeds:
       groupId: 67890
-      groupToken: test_token
+      accessToken: test_token
